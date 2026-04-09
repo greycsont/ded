@@ -11,6 +11,8 @@ vec3 hsl2rgb(vec3 c) {
     return c.z + c.y * (rgb-0.5)*(1.0-abs(2.0*c.z-1.0));
 }
 
+out vec4 frag_color;
+
 void main() {
     vec4 tc = texture(image, out_uv);
     float d = tc.r;
@@ -18,5 +20,5 @@ void main() {
     float alpha = smoothstep(0.5 - aaf, 0.5 + aaf, d);
     vec2 frag_uv = gl_FragCoord.xy / resolution;
     vec4 rainbow = vec4(hsl2rgb(vec3((time + frag_uv.x + frag_uv.y), 0.5, 0.5)), 1.0);
-    gl_FragColor = vec4(rainbow.rgb, alpha);
+    frag_color = vec4(rainbow.rgb, alpha);
 }

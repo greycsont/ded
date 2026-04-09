@@ -94,7 +94,7 @@ Errno read_entire_file(const char *file_path, String_Builder *sb)
     Errno result = 0;
     FILE *f = NULL;
 
-    f = fopen(file_path, "r");
+    f = fopen(file_path, "rb");
     if (f == NULL) return_defer(errno);
 
     size_t size;
@@ -107,9 +107,8 @@ Errno read_entire_file(const char *file_path, String_Builder *sb)
         assert(sb->items != NULL && "Buy more RAM lol");
     }
 
-    fread(sb->items, size, 1, f);
+    sb->count = fread(sb->items, 1, size, f);
     if (ferror(f)) return_defer(errno);
-    sb->count = size;
 
 defer:
     if (f) fclose(f);
@@ -133,7 +132,13 @@ Vec4f hex_to_vec4f(uint32_t color)
 Errno type_of_file(const char *file_path, File_Type *ft)
 {
 #ifdef _WIN32
-#error "TODO: type_of_file() is not implemented for Windows"
+    DWORD attrs = GetFileAttributesA(file_path);
+    if (attrs == INVALID_FILE_ATTRIBUTES) return GetLastError();
+    if (attrs & FILE_ATTRIBUTE_DIRECTORY) {
+        *ft = FT_DIRECTORY;
+    } else {
+        *ft = FT_REGULAR;
+    }
 #else
     struct stat sb = {0};
     if (stat(file_path, &sb) < 0) return errno;

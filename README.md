@@ -1,3 +1,8 @@
+# Waring
+The changes of this forked repository is purely vibe coded, it can be complie using build_msys2_mingw64.sh and run on windows 11
+
+I'm hesitated to make a pr of it cuz I need to learn wtf change is made and maybe test compability of it
+
 # Dramatic EDitor
 
 **THIS SOFTWARE IS UNFINISHED!!! Don't have any high expectations.**
